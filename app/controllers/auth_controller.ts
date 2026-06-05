@@ -9,6 +9,7 @@ export default class AuthController {
         const user = await User.verifyCredentials(email, password)
         const token = await User.accessTokens.create(user)
 
+
         return response.ok({
             token: token.value!.release(),
             user: {
@@ -18,10 +19,16 @@ export default class AuthController {
         })
     }
 
+
     //Log out user
     async logout({ auth, response }: HttpContext) {
         const user = auth.getUserOrFail()
         const token = auth.user!.currentAccessToken
+
+        if (!token) {
+            return response.unauthorized({ message: 'No active token found' })
+        }
+
         await User.accessTokens.delete(user, token.identifier)
         return response.ok({ message: 'Déconnecté avec succès' })
     }
