@@ -6,29 +6,47 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
-  'auth.new_account.store': {
+  'auth.login': {
     methods: ["POST"],
-    pattern: '/api/v1/auth/signup',
-    tokens: [{"old":"/api/v1/auth/signup","type":0,"val":"api","end":""},{"old":"/api/v1/auth/signup","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/signup","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/signup","type":0,"val":"signup","end":""}],
-    types: placeholder as Registry['auth.new_account.store']['types'],
+    pattern: '/api/auth/login',
+    tokens: [{"old":"/api/auth/login","type":0,"val":"api","end":""},{"old":"/api/auth/login","type":0,"val":"auth","end":""},{"old":"/api/auth/login","type":0,"val":"login","end":""}],
+    types: placeholder as Registry['auth.login']['types'],
   },
-  'auth.access_tokens.store': {
+  'auth.logout': {
     methods: ["POST"],
-    pattern: '/api/v1/auth/login',
-    tokens: [{"old":"/api/v1/auth/login","type":0,"val":"api","end":""},{"old":"/api/v1/auth/login","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/login","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/login","type":0,"val":"login","end":""}],
-    types: placeholder as Registry['auth.access_tokens.store']['types'],
+    pattern: '/api/auth/logout',
+    tokens: [{"old":"/api/auth/logout","type":0,"val":"api","end":""},{"old":"/api/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/auth/logout","type":0,"val":"logout","end":""}],
+    types: placeholder as Registry['auth.logout']['types'],
   },
-  'profile.profile.show': {
+  'auth.me': {
     methods: ["GET","HEAD"],
-    pattern: '/api/v1/account/profile',
-    tokens: [{"old":"/api/v1/account/profile","type":0,"val":"api","end":""},{"old":"/api/v1/account/profile","type":0,"val":"v1","end":""},{"old":"/api/v1/account/profile","type":0,"val":"account","end":""},{"old":"/api/v1/account/profile","type":0,"val":"profile","end":""}],
-    types: placeholder as Registry['profile.profile.show']['types'],
+    pattern: '/api/auth/me',
+    tokens: [{"old":"/api/auth/me","type":0,"val":"api","end":""},{"old":"/api/auth/me","type":0,"val":"auth","end":""},{"old":"/api/auth/me","type":0,"val":"me","end":""}],
+    types: placeholder as Registry['auth.me']['types'],
   },
-  'profile.access_tokens.destroy': {
+  'accidents.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/accidents',
+    tokens: [{"old":"/api/accidents","type":0,"val":"api","end":""},{"old":"/api/accidents","type":0,"val":"accidents","end":""}],
+    types: placeholder as Registry['accidents.index']['types'],
+  },
+  'accidents.store': {
     methods: ["POST"],
-    pattern: '/api/v1/account/logout',
-    tokens: [{"old":"/api/v1/account/logout","type":0,"val":"api","end":""},{"old":"/api/v1/account/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/account/logout","type":0,"val":"account","end":""},{"old":"/api/v1/account/logout","type":0,"val":"logout","end":""}],
-    types: placeholder as Registry['profile.access_tokens.destroy']['types'],
+    pattern: '/api/accidents',
+    tokens: [{"old":"/api/accidents","type":0,"val":"api","end":""},{"old":"/api/accidents","type":0,"val":"accidents","end":""}],
+    types: placeholder as Registry['accidents.store']['types'],
+  },
+  'exports.excel': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/exports/excel',
+    tokens: [{"old":"/api/exports/excel","type":0,"val":"api","end":""},{"old":"/api/exports/excel","type":0,"val":"exports","end":""},{"old":"/api/exports/excel","type":0,"val":"excel","end":""}],
+    types: placeholder as Registry['exports.excel']['types'],
+  },
+  'exports.pdf': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/exports/pdf',
+    tokens: [{"old":"/api/exports/pdf","type":0,"val":"api","end":""},{"old":"/api/exports/pdf","type":0,"val":"exports","end":""},{"old":"/api/exports/pdf","type":0,"val":"pdf","end":""}],
+    types: placeholder as Registry['exports.pdf']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

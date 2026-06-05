@@ -1,37 +1,22 @@
-/*
-|--------------------------------------------------------------------------
-| Routes file
-|--------------------------------------------------------------------------
-|
-| The routes file is used for defining the HTTP routes.
-|
-*/
-
-import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
-import { controllers } from '#generated/controllers'
+import { middleware } from './kernel.js'
 
-router.get('/', () => {
-  return { hello: 'world' }
-})
+const AuthController = () => import('#controllers/auth_controller')
+const AccidentsController = () => import('#controllers/accidents_controller')
+const ExportsController = () => import('#controllers/exports_controller')
 
-router
-  .group(() => {
-    router
-      .group(() => {
-        router.post('signup', [controllers.NewAccount, 'store'])
-        router.post('login', [controllers.AccessTokens, 'store'])
-      })
-      .prefix('auth')
-      .as('auth')
+// Public routes
+router.post('/api/auth/login', [AuthController, 'login'])
 
-    router
-      .group(() => {
-        router.get('profile', [controllers.Profile, 'show'])
-        router.post('logout', [controllers.AccessTokens, 'destroy'])
-      })
-      .prefix('account')
-      .as('profile')
-      .use(middleware.auth())
-  })
-  .prefix('/api/v1')
+// Protected routes
+router.group(() => {
+  router.post('/api/auth/logout', [AuthController, 'logout'])
+  router.get('/api/auth/me', [AuthController, 'me'])
+
+  router.get('/api/accidents', [AccidentsController, 'index'])
+  router.post('/api/accidents', [AccidentsController, 'store'])
+
+  router.get('/api/exports/excel', [ExportsController, 'excel'])
+  router.get('/api/exports/pdf', [ExportsController, 'pdf'])
+
+}).use(middleware.auth({ guards: ['api'] }))

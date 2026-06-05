@@ -4,21 +4,30 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
-    'auth.new_account.store': { paramsTuple?: []; params?: {} }
-    'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
-    'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
-  }
-  GET: {
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
-  }
-  HEAD: {
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
+    'auth.login': { paramsTuple?: []; params?: {} }
+    'auth.logout': { paramsTuple?: []; params?: {} }
+    'auth.me': { paramsTuple?: []; params?: {} }
+    'accidents.index': { paramsTuple?: []; params?: {} }
+    'accidents.store': { paramsTuple?: []; params?: {} }
+    'exports.excel': { paramsTuple?: []; params?: {} }
+    'exports.pdf': { paramsTuple?: []; params?: {} }
   }
   POST: {
-    'auth.new_account.store': { paramsTuple?: []; params?: {} }
-    'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
-    'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
+    'auth.login': { paramsTuple?: []; params?: {} }
+    'auth.logout': { paramsTuple?: []; params?: {} }
+    'accidents.store': { paramsTuple?: []; params?: {} }
+  }
+  GET: {
+    'auth.me': { paramsTuple?: []; params?: {} }
+    'accidents.index': { paramsTuple?: []; params?: {} }
+    'exports.excel': { paramsTuple?: []; params?: {} }
+    'exports.pdf': { paramsTuple?: []; params?: {} }
+  }
+  HEAD: {
+    'auth.me': { paramsTuple?: []; params?: {} }
+    'accidents.index': { paramsTuple?: []; params?: {} }
+    'exports.excel': { paramsTuple?: []; params?: {} }
+    'exports.pdf': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

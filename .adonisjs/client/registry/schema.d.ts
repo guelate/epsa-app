@@ -7,52 +7,88 @@ import type { InferInput, SimpleError } from '@vinejs/vine/types'
 export type ParamValue = string | number | bigint | boolean
 
 export interface Registry {
-  'auth.new_account.store': {
+  'auth.login': {
     methods: ["POST"]
-    pattern: '/api/v1/auth/signup'
+    pattern: '/api/auth/login'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/user').signupValidator)>>
+      body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/user').signupValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['login']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['login']>>>
     }
   }
-  'auth.access_tokens.store': {
+  'auth.logout': {
     methods: ["POST"]
-    pattern: '/api/v1/auth/login'
+    pattern: '/api/auth/logout'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/user').loginValidator)>>
+      body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/user').loginValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
     }
   }
-  'profile.profile.show': {
+  'auth.me': {
     methods: ["GET","HEAD"]
-    pattern: '/api/v1/account/profile'
+    pattern: '/api/auth/me'
     types: {
       body: {}
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['me']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['me']>>>
     }
   }
-  'profile.access_tokens.destroy': {
-    methods: ["POST"]
-    pattern: '/api/v1/account/logout'
+  'accidents.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/accidents'
     types: {
       body: {}
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['index']>>>
+    }
+  }
+  'accidents.store': {
+    methods: ["POST"]
+    pattern: '/api/accidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['store']>>>
+    }
+  }
+  'exports.excel': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/exports/excel'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/exports_controller').default['excel']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/exports_controller').default['excel']>>>
+    }
+  }
+  'exports.pdf': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/exports/pdf'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/exports_controller').default['pdf']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/exports_controller').default['pdf']>>>
     }
   }
 }
