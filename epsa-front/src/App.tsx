@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/context/AuthContext'
-import Login from './pages/Login'
-// import Dashboard from '@/pages/Dashboard'
+// import Login from './components/Login'
+import Dashboard from './components/Dashboard'
 
 
 //Protects routes that require authentication.
@@ -16,13 +16,18 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={
+            <div className="min-h-screen flex items-center justify-center">
+              {/* <Login /> */}
+               <Dashboard />
+            </div>
+          } />
           <Route
             path="/"
             element={
               <PrivateRoute>
                 <p>Hello</p>
-                {/* <Dashboard /> */}
+                <Dashboard />
               </PrivateRoute>
             }
           />
