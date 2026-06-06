@@ -21,6 +21,7 @@ export default function Dashboard() {
     setAccidents((prev) => [accident, ...prev])
   }
 
+  //todo: utility function
   // Downloads the export file from the API.
   async function handleExport(format: 'excel' | 'pdf') {
     const url = format === 'excel' ? '/api/exports/excel' : '/api/exports/pdf'
@@ -46,7 +47,7 @@ export default function Dashboard() {
 
       <main className="flex-1 p-5 max-w-6xl mx-auto w-full">
         <h1 className="text-base font-medium text-gray-900 mb-1">Tableau de bord</h1>
-        <p className="text-xs text-gray-400 mb-5">Exercice 2025 — Mise à jour aujourd'hui</p>
+        {/* <p className="text-xs text-gray-400 mb-5">Exercice 2025 — Mise à jour aujourd'hui</p> */}
 
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-3 mb-5">
@@ -72,6 +73,7 @@ export default function Dashboard() {
         {/* Accidents table */}
         <AccidentsTable accidents={accidents} />
 
+        {/* todo: split component */}
         {/* Export buttons */}
         <div className="flex justify-end gap-2 mt-3">
           <button

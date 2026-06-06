@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/context/AuthContext'
-// import Login from './components/Login'
+import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 
 
@@ -18,15 +18,13 @@ export default function App() {
         <Routes>
           <Route path="/login" element={
             <div className="min-h-screen flex items-center justify-center">
-              {/* <Login /> */}
-               <Dashboard />
+              <Login />
             </div>
           } />
           <Route
             path="/"
             element={
               <PrivateRoute>
-                <p>Hello</p>
                 <Dashboard />
               </PrivateRoute>
             }

@@ -15,7 +15,7 @@ export default function LoginForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Submits credentials to the API and stores the token on success.
+  // Submits credentials to the API and stores the token
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -44,7 +44,7 @@ export default function LoginForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@epsa-group.com"
+            placeholder="admin@epsa.com"
             required
           />
         </div>
@@ -55,7 +55,7 @@ export default function LoginForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder="•••••"
             required
           />
         </div>

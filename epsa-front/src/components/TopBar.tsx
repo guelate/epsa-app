@@ -24,7 +24,8 @@ export default function Topbar() {
       </span>
       <div className="flex items-center gap-3">
         <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center text-white text-xs font-medium">
-          {user?.email?.slice(0, 2).toUpperCase() ?? 'AD'}
+        {/* Todo: Name admin */}
+          {/* {user?.email?.slice(0, 2).toUpperCase() ?? 'AD'} */}
         </div>
         <span className="text-white/70 text-xs">{user?.email ?? 'Admin EPSA'}</span>
         <button onClick={handleLogout} className="text-white/50 hover:text-white/80 transition-colors text-xs">

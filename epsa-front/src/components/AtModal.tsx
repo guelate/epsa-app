@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import api from '@/api/axios'
 import type { Accident, Employee } from '@/interfaces/interface'
 
+//Todo: export 
 interface DeclareModalProps {
   open: boolean
   onClose: () => void
@@ -74,7 +75,7 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
             <span style={{ color: '#854F0B' }}>⚠</span>
@@ -86,6 +87,7 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
           La DAT doit être transmise à la CPAM dans un délai légal de 48h.
         </div>
 
+        {/* todo:split */}
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-1">
             <Label>Employé</Label>
