@@ -1,4 +1,4 @@
-.counter {
+/* .counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -16,6 +16,7 @@
     outline-offset: 2px;
   }
 }
+
 
 .hero {
   position: relative;
@@ -181,4 +182,4 @@
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */

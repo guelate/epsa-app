@@ -33,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen  flex items-center justify-center border border-red-600">
       <div className="bg-white border border-gray-200 rounded-xl p-8 w-full max-w-md shadow-sm">
 
         {/* Logo */}
