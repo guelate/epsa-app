@@ -3,13 +3,9 @@ import type { KpiCardProps } from "@/interfaces/interface";
 // KPI card 
 export default function KpiCard({ label, value, sublabel, alert = false }: KpiCardProps) {
   return (
-    <div
-      className="rounded-lg p-4 border"
-      style={{
-        background: alert ? '#FAEEDA' : 'white',
-        borderColor: alert ? '#FAC775' : '#e5e7eb',
-      }}
-    >
+  
+    <div className={`rounded-lg p-4 ${alert ? 'bg-white border-solid shadow' : 'bg-white border-gray-100 shadow'}`}>
+
       <p className="text-xs mb-1.5" style={{ color: alert ? '#854F0B' : '#6b7280' }}>
         {label}
       </p>

@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,50 +8,40 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import api from '@/api/axios'
-import type { DeclareModalProps, Employee, TypeLocationFieldsProps } from '@/interfaces/interface'
-import { ACCIDENT_TYPES, DEFAULT_FORM } from '@/constants/constants'
-import type { AccidentType } from '@/types/type'
+import { ACCIDENT_TYPES } from '@/constants/constants'
 import { EmployeeSelect } from './EmployeeSelect'
-import { DateTimeFields } from './DateTimeFields'
+import type { DeclareModalProps, Employee } from '@/interfaces/interface'
+import { accidentSchema, type AccidentFormData } from '@/validators/accidentValidators'
 
-
-// Renders the accident type selector and location input
-function TypeLocationFields({ type, location, onTypeChange, onLocationChange }: TypeLocationFieldsProps) {
-  return (
-    <div className="grid grid-cols-2 gap-3">
-      <div className="space-y-1">
-        <Label>Type d'accident</Label>
-        <Select value={type} onValueChange={(v) => onTypeChange(v as AccidentType)}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {ACCIDENT_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>{t}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="location">Lieu précis</Label>
-        <Input
-          id="location"
-          value={location}
-          onChange={(e) => onLocationChange(e.target.value)}
-          placeholder="Ex: Entrepôt Lyon"
-          required
-        />
-      </div>
-    </div>
-  )
+// Error message displayed under a field.
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null
+  return <p className="text-xs text-red-500 mt-0.5">{message}</p>
 }
 
-// Modal form to declare a work accident
+// Modal form to declare a work accident and submit it to the API.
 export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps) {
   const [employees, setEmployees] = useState<Employee[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [form, setForm] = useState(DEFAULT_FORM)
+  const [serverError, setServerError] = useState('')
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<AccidentFormData>({
+    resolver: zodResolver(accidentSchema),
+    defaultValues: {
+      employeeId: '',
+      accidentDate: '',
+      accidentTime: '',
+      type: 'Lieu de travail',
+      location: '',
+      description: '',
+      witness: '',
+    },
+  })
 
   // Fetches the employee list when the modal opens.
   useEffect(() => {
@@ -57,41 +49,27 @@ export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps)
     api.get('/api/employees').then(({ data }) => setEmployees(data))
   }, [open])
 
-  // Updates a single field in the form state.
-  function setField<K extends keyof typeof DEFAULT_FORM>(key: K, value: typeof DEFAULT_FORM[K]) {
-    setForm((prev) => ({ ...prev, [key]: value }))
-  }
-
-  // Resets the form fields to their initial state.
-  function resetForm() {
-    setForm(DEFAULT_FORM)
-    setError('')
-  }
-
   // Submits the accident declaration to the API.
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+  async function onSubmit(formData: AccidentFormData) {
 
+    console.log('Submitting form with data:') // Debug log
+    setServerError('')
     try {
       const { data } = await api.post('/api/accidents', {
-        employee_id: Number(form.employeeId),
-        accident_date: form.accidentDate,
-        accident_time: form.accidentTime,
-        type: form.type,
-        location: form.location,
-        description: form.description,
-        witness: form.witness || null,
+        employee_id: Number(formData.employeeId),
+        accident_date: formData.accidentDate,
+        accident_time: formData.accidentTime,
+        type: formData.type,
+        location: formData.location,
+        description: formData.description,
+        witness: formData.witness || null,
         status: 'En attente',
       })
       onSuccess(data)
-      resetForm()
+      reset()
       onClose()
     } catch {
-      setError('Une erreur est survenue. Vérifiez les champs.')
-    } finally {
-      setLoading(false)
+      setServerError('Une erreur est survenue. Vérifiez les champs.')
     }
   }
 
@@ -109,59 +87,125 @@ export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps)
           La DAT doit être transmise à la CPAM dans un délai légal de 48h.
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <EmployeeSelect
-            employees={employees}
-            value={form.employeeId}
-            onChange={(v) => setField('employeeId', v)}
-          />
-          <DateTimeFields
-            date={form.accidentDate}
-            time={form.accidentTime}
-            onDateChange={(v) => setField('accidentDate', v)}
-            onTimeChange={(v) => setField('accidentTime', v)}
-          />
-          <TypeLocationFields
-            type={form.type}
-            location={form.location}
-            onTypeChange={(v) => setField('type', v)}
-            onLocationChange={(v) => setField('location', v)}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
 
+          {/* Employee */}
+          <Controller
+            name="employeeId"
+            control={control}
+            render={({ field }) => (
+              <EmployeeSelect
+                employees={employees}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+          <FieldError message={errors.employeeId?.message} />
+
+          {/* Date & Time */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="date">Date de l'accident</Label>
+              <Controller
+                name="accidentDate"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="date"
+                    type="date"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              <FieldError message={errors.accidentDate?.message} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="time">Heure</Label>
+              <Controller
+                name="accidentTime"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="time"
+                    type="time"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              <FieldError message={errors.accidentTime?.message} />
+            </div>
+          </div>
+
+          {/* Type & Location */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label>Type d'accident</Label>
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ACCIDENT_TYPES.map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <FieldError message={errors.type?.message} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="location">Lieu précis</Label>
+              <Input
+                id="location"
+                placeholder="Ex: Entrepôt Lyon"
+                {...register('location')}
+              />
+              <FieldError message={errors.location?.message} />
+            </div>
+          </div>
+
+          {/* Description */}
           <div className="space-y-1">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={form.description}
-              onChange={(e) => setField('description', e.target.value)}
               placeholder="Décrivez les circonstances de l'accident..."
-              required
+              {...register('description')}
             />
+            <FieldError message={errors.description?.message} />
           </div>
 
+          {/* Witness */}
           <div className="space-y-1">
             <Label htmlFor="witness">Témoin (optionnel)</Label>
             <Input
               id="witness"
-              value={form.witness}
-              onChange={(e) => setField('witness', e.target.value)}
               placeholder="Nom du témoin"
+              {...register('witness')}
             />
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {serverError && <p className="text-sm text-red-500">{serverError}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={() => { reset(); onClose() }}>
               Annuler
             </Button>
             <Button
               type="submit"
               className="text-white"
               style={{ background: '#1a2f5a' }}
-              disabled={loading}
+              disabled={isSubmitting}
             >
-              {loading ? 'Enregistrement...' : 'Enregistrer'}
+              {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
             </Button>
           </div>
         </form>

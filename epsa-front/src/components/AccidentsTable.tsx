@@ -6,7 +6,9 @@ import { COLUMNS, STATUS_STYLES, TYPE_STYLES } from "@/constants/constants";
 // Table of accidents with employee initials, date, type, location and status
 export default function AccidentsTable({ accidents }: AccidentsTableProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    // <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white rounded-lg overflow-hidden border shadow" >
+
       <table className="w-full text-sm" style={{ tableLayout: 'fixed' }}>
         <thead className="bg-gray-50">
           <tr>
@@ -28,8 +30,8 @@ export default function AccidentsTable({ accidents }: AccidentsTableProps) {
             const date = new Date(accident.accidentDate).toLocaleDateString('fr-FR')
 
             return (
-              <tr key={accident.id} style={{ background: isPending ? '#FAEEDA' : 'white' }}>
-                <td className="px-3 py-2.5 border-b border-gray-100">
+              <tr key={accident.id} style={{ background: isPending ? '#f9fafb' : 'white' }}>
+                <td className="px-3 py-2.5 border-b border-gray-100 ">
                   <div className="flex items-center gap-2">
                     <Initials name={employeeName} />
                     <span className="text-gray-900 text-xs">{employeeName}</span>

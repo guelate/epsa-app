@@ -44,7 +44,7 @@ export default function LoginForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@epsa.com"
+            placeholder="Gilles@epsa.com"
             required
           />
         </div>
