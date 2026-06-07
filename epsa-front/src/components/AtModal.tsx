@@ -6,27 +6,50 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import api from '@/api/axios'
-import type { Accident, Employee } from '@/interfaces/interface'
+import type { DeclareModalProps, Employee, TypeLocationFieldsProps } from '@/interfaces/interface'
+import { ACCIDENT_TYPES, DEFAULT_FORM } from '@/constants/constants'
+import type { AccidentType } from '@/types/type'
+import { EmployeeSelect } from './EmployeeSelect'
+import { DateTimeFields } from './DateTimeFields'
 
-//Todo: export 
-interface DeclareModalProps {
-  open: boolean
-  onClose: () => void
-  onSuccess: (accident: Accident) => void
+
+// Renders the accident type selector and location input
+function TypeLocationFields({ type, location, onTypeChange, onLocationChange }: TypeLocationFieldsProps) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-1">
+        <Label>Type d'accident</Label>
+        <Select value={type} onValueChange={(v) => onTypeChange(v as AccidentType)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {ACCIDENT_TYPES.map((t) => (
+              <SelectItem key={t} value={t}>{t}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-1">
+        <Label htmlFor="location">Lieu précis</Label>
+        <Input
+          id="location"
+          value={location}
+          onChange={(e) => onLocationChange(e.target.value)}
+          placeholder="Ex: Entrepôt Lyon"
+          required
+        />
+      </div>
+    </div>
+  )
 }
 
-export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps) {
+// Modal form to declare a work accident
+export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps) {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  const [employeeId, setEmployeeId] = useState('')
-  const [accidentDate, setAccidentDate] = useState('')
-  const [accidentTime, setAccidentTime] = useState('')
-  const [type, setType] = useState<'Lieu de travail' | 'Trajet'>('Lieu de travail')
-  const [location, setLocation] = useState('')
-  const [description, setDescription] = useState('')
-  const [witness, setWitness] = useState('')
+  const [form, setForm] = useState(DEFAULT_FORM)
 
   // Fetches the employee list when the modal opens.
   useEffect(() => {
@@ -34,15 +57,14 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
     api.get('/api/employees').then(({ data }) => setEmployees(data))
   }, [open])
 
+  // Updates a single field in the form state.
+  function setField<K extends keyof typeof DEFAULT_FORM>(key: K, value: typeof DEFAULT_FORM[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }))
+  }
+
   // Resets the form fields to their initial state.
   function resetForm() {
-    setEmployeeId('')
-    setAccidentDate('')
-    setAccidentTime('')
-    setType('Lieu de travail')
-    setLocation('')
-    setDescription('')
-    setWitness('')
+    setForm(DEFAULT_FORM)
     setError('')
   }
 
@@ -54,13 +76,13 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
 
     try {
       const { data } = await api.post('/api/accidents', {
-        employee_id: Number(employeeId),
-        accident_date: accidentDate,
-        accident_time: accidentTime,
-        type,
-        location,
-        description,
-        witness: witness || null,
+        employee_id: Number(form.employeeId),
+        accident_date: form.accidentDate,
+        accident_time: form.accidentTime,
+        type: form.type,
+        location: form.location,
+        description: form.description,
+        witness: form.witness || null,
         status: 'En attente',
       })
       onSuccess(data)
@@ -87,78 +109,31 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
           La DAT doit être transmise à la CPAM dans un délai légal de 48h.
         </div>
 
-        {/* todo:split */}
         <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="space-y-1">
-            <Label>Employé</Label>
-            <Select value={employeeId} onValueChange={setEmployeeId} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner un employé" />
-              </SelectTrigger>
-              <SelectContent>
-                {employees.map((emp) => (
-                  <SelectItem key={emp.id} value={String(emp.id)}>
-                    {emp.firstName} {emp.lastName} — {emp.position}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="date">Date de l'accident</Label>
-              <Input
-                id="date"
-                type="date"
-                value={accidentDate}
-                onChange={(e) => setAccidentDate(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="time">Heure</Label>
-              <Input
-                id="time"
-                type="time"
-                value={accidentTime}
-                onChange={(e) => setAccidentTime(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label>Type d'accident</Label>
-              <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Lieu de travail">Lieu de travail</SelectItem>
-                  <SelectItem value="Trajet">Trajet</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="location">Lieu précis</Label>
-              <Input
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Ex: Entrepôt Lyon"
-                required
-              />
-            </div>
-          </div>
+          <EmployeeSelect
+            employees={employees}
+            value={form.employeeId}
+            onChange={(v) => setField('employeeId', v)}
+          />
+          <DateTimeFields
+            date={form.accidentDate}
+            time={form.accidentTime}
+            onDateChange={(v) => setField('accidentDate', v)}
+            onTimeChange={(v) => setField('accidentTime', v)}
+          />
+          <TypeLocationFields
+            type={form.type}
+            location={form.location}
+            onTypeChange={(v) => setField('type', v)}
+            onLocationChange={(v) => setField('location', v)}
+          />
 
           <div className="space-y-1">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={form.description}
+              onChange={(e) => setField('description', e.target.value)}
               placeholder="Décrivez les circonstances de l'accident..."
               required
             />
@@ -168,8 +143,8 @@ export default function AtModel({ open, onClose, onSuccess }: DeclareModalProps)
             <Label htmlFor="witness">Témoin (optionnel)</Label>
             <Input
               id="witness"
-              value={witness}
-              onChange={(e) => setWitness(e.target.value)}
+              value={form.witness}
+              onChange={(e) => setField('witness', e.target.value)}
               placeholder="Nom du témoin"
             />
           </div>

@@ -1,3 +1,5 @@
+import type { AccidentType } from "@/types/type"
+
 export interface User {
   id: number
   email: string
@@ -36,4 +38,50 @@ export interface Accident {
   witness: string | null
   status: 'En attente' | 'Envoyé CPAM' | 'Reconnu' | 'Contesté'
   employee: Employee
+}
+
+export interface AccidentsTableProps {
+  accidents: Accident[]
+}
+
+export interface BadgeStyle {
+  bg: string
+  color: string
+}
+
+export interface BadgeProps {
+  label: string
+  styles: BadgeStyle
+}
+
+export interface InitialsProps {
+  name: string
+}
+
+export interface EmployeeSelectProps {
+  employees: Employee[]
+  value: string
+  onChange: (value: string) => void
+}
+
+
+export interface DateTimeFieldsProps {
+  date: string
+  time: string
+  onDateChange: (value: string) => void
+  onTimeChange: (value: string) => void
+}
+
+
+export interface TypeLocationFieldsProps {
+  type: AccidentType
+  location: string
+  onTypeChange: (value: AccidentType) => void
+  onLocationChange: (value: string) => void
+}
+
+export interface DeclareModalProps {
+  open: boolean
+  onClose: () => void
+  onSuccess: (accident: Accident) => void
 }
