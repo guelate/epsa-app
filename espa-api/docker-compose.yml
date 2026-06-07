@@ -1,0 +1,15 @@
+# Docker Compose file for setting up a PostgreSQL database 
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: epsa
+      POSTGRES_PASSWORD: epsa
+      POSTGRES_DB: epsa_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

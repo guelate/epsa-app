@@ -24,3 +24,18 @@ export const loginValidator = vine.create({
   email: email(),
   password: vine.string(),
 })
+
+
+// Validates the accident declaration payload before saving to the database.
+export const accidentValidator = vine.compile(
+  vine.object({
+    employee_id: vine.number().positive(),
+    accident_date: vine.string().regex(/^\d{4}-\d{2}-\d{2}$/).trim(),
+    accident_time: vine.string().regex(/^\d{2}:\d{2}$/),
+    type: vine.enum(['Lieu de travail', 'Trajet']),
+    location: vine.string().minLength(2).trim(),
+    description: vine.string().minLength(10).trim(),
+    witness: vine.string().nullable().optional(),
+    status: vine.enum(['En attente', 'Envoyé CPAM', 'Reconnu', 'Contesté']),
+  })
+)
