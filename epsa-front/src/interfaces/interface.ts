@@ -85,3 +85,7 @@ export interface DeclareModalProps {
   onClose: () => void
   onSuccess: (accident: Accident) => void
 }
+
+export interface DashboardHeaderProps {
+  onDeclare: () => void
+}

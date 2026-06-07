@@ -1,4 +1,5 @@
 import type { BadgeStyle } from "@/interfaces/interface";
+import type { AccidentType } from "@/types/type";
 
 export const STATUS_STYLES: Record<string, BadgeStyle> = {
   'En attente':  { bg: '#FAEEDA', color: '#854F0B' },
@@ -31,3 +32,11 @@ export const DEFAULT_FORM = {
   description: '',
   witness: '',
 }
+
+export const TOTAL_EMPLOYEES = 247
+
+export const EXPORT_BUTTONS = [
+  { format: 'excel' as const, label: 'Export Excel', borderColor: '#3B6D11', color: '#3B6D11' },
+  { format: 'pdf' as const,   label: 'Export PDF',   borderColor: '#A32D2D', color: '#A32D2D' },
+]
+
