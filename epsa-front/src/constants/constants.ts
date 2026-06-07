@@ -33,7 +33,7 @@ export const DEFAULT_FORM = {
   witness: '',
 }
 
-export const TOTAL_EMPLOYEES = 247
+export const TOTAL_EMPLOYEES = 5
 
 export const EXPORT_BUTTONS = [
   { format: 'excel' as const, label: 'Export Excel', borderColor: '#3B6D11', color: '#3B6D11' },

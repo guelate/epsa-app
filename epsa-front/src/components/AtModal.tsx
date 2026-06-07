@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,6 +14,9 @@ import { ACCIDENT_TYPES } from '@/constants/constants'
 import { EmployeeSelect } from './EmployeeSelect'
 import type { DeclareModalProps, Employee } from '@/interfaces/interface'
 import { accidentSchema, type AccidentFormData } from '@/validators/accidentValidators'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from './ui/calendar'
 
 // Error message displayed under a field.
 function FieldError({ message }: { message?: string }) {
@@ -75,7 +80,7 @@ export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps)
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-white">
+      <DialogContent className="max-w-md bg-white backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
             <span style={{ color: '#854F0B' }}>⚠</span>
@@ -104,23 +109,40 @@ export default function AtModal({ open, onClose, onSuccess }: DeclareModalProps)
           <FieldError message={errors.employeeId?.message} />
 
           {/* Date & Time */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-3">
             <div className="space-y-1">
-              <Label htmlFor="date">Date de l'accident</Label>
+              <Label>Date de l'accident</Label>
               <Controller
                 name="accidentDate"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    id="date"
-                    type="date"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal bg-white"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value
+                          ? format(new Date(field.value), 'dd MMMM yyyy', { locale: fr })
+                          : 'Sélectionner une date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto bg-white border border-gray-200 p-0 z-50">
+                      <Calendar
+                        mode="single"
+                        locale={fr}
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={(date: Date | undefined) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                        className="bg-white p-3 [&_td]:p-1 [&_button]:h-8 [&_button]:w-8 [&_button]:text-center"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 )}
               />
               <FieldError message={errors.accidentDate?.message} />
             </div>
+
             <div className="space-y-1">
               <Label htmlFor="time">Heure</Label>
               <Controller

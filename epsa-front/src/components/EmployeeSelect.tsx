@@ -11,7 +11,7 @@ export function EmployeeSelect({ employees, value, onChange }: EmployeeSelectPro
         <SelectTrigger>
           <SelectValue placeholder="Sélectionner un employé" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           {employees.map((emp) => (
             <SelectItem key={emp.id} value={String(emp.id)}>
               {emp.firstName} {emp.lastName} — {emp.position}

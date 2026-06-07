@@ -11,6 +11,8 @@ import { ExportButtons } from './ExportButtons'
 
 
 // Fetches accidents, displays KPIs, table and export buttons.
+
+
 export default function Dashboard() {
   const [accidents, setAccidents] = useState<Accident[]>([])
   const [modalOpen, setModalOpen] = useState(false)
@@ -35,7 +37,7 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-3 gap-3 mb-5">
           <KpiCard label="Effectif total"    value={TOTAL_EMPLOYEES}  sublabel="salariés actifs" />
-          <KpiCard label="AT déclarés 2025"  value={accidents.length} sublabel="cette année" />
+          <KpiCard label="AT déclarés 2026"  value={accidents.length} sublabel="cette année" />
           <KpiCard label="En attente CPAM"   value={pending}          sublabel="à traiter" alert={pending > 0} />
         </div>
 
