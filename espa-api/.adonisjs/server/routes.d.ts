@@ -7,6 +7,7 @@ export type ScannedRoutes = {
     'auth.login': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'auth.me': { paramsTuple?: []; params?: {} }
+    'employees.index': { paramsTuple?: []; params?: {} }
     'accidents.index': { paramsTuple?: []; params?: {} }
     'accidents.store': { paramsTuple?: []; params?: {} }
     'exports.excel': { paramsTuple?: []; params?: {} }
@@ -19,12 +20,14 @@ export type ScannedRoutes = {
   }
   GET: {
     'auth.me': { paramsTuple?: []; params?: {} }
+    'employees.index': { paramsTuple?: []; params?: {} }
     'accidents.index': { paramsTuple?: []; params?: {} }
     'exports.excel': { paramsTuple?: []; params?: {} }
     'exports.pdf': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'auth.me': { paramsTuple?: []; params?: {} }
+    'employees.index': { paramsTuple?: []; params?: {} }
     'accidents.index': { paramsTuple?: []; params?: {} }
     'exports.excel': { paramsTuple?: []; params?: {} }
     'exports.pdf': { paramsTuple?: []; params?: {} }

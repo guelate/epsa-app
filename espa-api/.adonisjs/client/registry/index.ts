@@ -24,6 +24,12 @@ const routes = {
     tokens: [{"old":"/api/auth/me","type":0,"val":"api","end":""},{"old":"/api/auth/me","type":0,"val":"auth","end":""},{"old":"/api/auth/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['auth.me']['types'],
   },
+  'employees.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/employees',
+    tokens: [{"old":"/api/employees","type":0,"val":"api","end":""},{"old":"/api/employees","type":0,"val":"employees","end":""}],
+    types: placeholder as Registry['employees.index']['types'],
+  },
   'accidents.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/accidents',

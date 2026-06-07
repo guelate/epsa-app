@@ -43,6 +43,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['me']>>>
     }
   }
+  'employees.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/employees'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/employees_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/employees_controller').default['index']>>>
+    }
+  }
   'accidents.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/accidents'
@@ -59,12 +71,12 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/accidents'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/user').accidentValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/user').accidentValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/accidents_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'exports.excel': {

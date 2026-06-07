@@ -4,6 +4,7 @@ import { middleware } from './kernel.js'
 const AuthController = () => import('#controllers/auth_controller')
 const AccidentsController = () => import('#controllers/accidents_controller')
 const ExportsController = () => import('#controllers/exports_controller')
+const EmployeesController = () => import('#controllers/employees_controller')
 
 // Public routes
 router.post('/api/auth/login', [AuthController, 'login'])
@@ -12,6 +13,8 @@ router.post('/api/auth/login', [AuthController, 'login'])
 router.group(() => {
   router.post('/api/auth/logout', [AuthController, 'logout'])
   router.get('/api/auth/me', [AuthController, 'me'])
+
+  router.get('/api/employees', [EmployeesController, 'index'])
 
   router.get('/api/accidents', [AccidentsController, 'index'])
   router.post('/api/accidents', [AccidentsController, 'store'])
