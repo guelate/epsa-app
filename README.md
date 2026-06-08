@@ -53,6 +53,8 @@ pnpm install
 
 ```bash
 cp .env.example .env
+node ace generate:key
+Copie la clé générée et remplace la valeur de `APP_KEY` dans le fichier `.env`.
 node ace migration:run
 node ace db:seed
 ```
