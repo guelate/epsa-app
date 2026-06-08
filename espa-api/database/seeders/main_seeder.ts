@@ -7,7 +7,7 @@ import { DateTime } from 'luxon'
 export default class extends BaseSeeder {
   async run() {
     await User.create({
-      email: 'admin@epsa.com',
+      email: 'Gilles@epsa.com',
       password: 'epsa',
       fullName: 'Gilles Clément',
     })
